@@ -1,3 +1,92 @@
+# Sellen — Complete Build Guide
+> **Live site:** https://sellen.store  
+> **GitHub:** https://github.com/ESSAIDI-M/Sellen  
+> **Tagline:** Sell anything. Keep everything. That's Sellen.
+
+---
+
+## Current Status ✅
+
+| Item | Status |
+|------|--------|
+| Domain sellen.store | ✅ Live |
+| Vercel deployment | ✅ Live (sellen.vercel.app) |
+| GitHub repo | ✅ Connected (auto-deploys on push) |
+| Next.js project | ✅ Created |
+| Landing page design | ✅ Ready to paste |
+| Supabase account | ✅ Created |
+| Stripe sandbox | ✅ Created (Platform model) |
+| Hostinger domain | ✅ Paid and connected |
+
+---
+
+## Immediate Next Steps (Do These First)
+
+### 1. Copy images into public folder
+In VSCode → find `public/` folder → drag these files in:
+- `sellen.png` (S icon favicon)
+- `Sellen-logo.png` (full wordmark)
+- From favicon_io.zip: `favicon.ico`, `favicon-32x32.png`, `favicon-16x16.png`, `apple-touch-icon.png`
+
+### 2. Replace src/app/page.tsx
+Open `src/app/page.tsx` → Cmd+A → delete → paste the page.tsx code below.
+
+### 3. Replace src/app/layout.tsx
+Open `src/app/layout.tsx` → Cmd+A → delete → paste the layout.tsx code below.
+
+### 4. Test locally
+```bash
+npm run dev
+# Open localhost:3000 — should show Sellen landing page
+```
+
+### 5. Push to GitHub → auto-deploys to sellen.store
+```bash
+git add .
+git commit -m "add landing page with logo and favicon"
+git push
+```
+
+---
+
+## File Contents to Paste
+
+### src/app/layout.tsx
+```tsx
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Sellen — Sell anything. Keep everything.",
+  description: "The all-in-one platform for creators to sell digital products, courses, and coaching. No hidden fees.",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
+    </html>
+  );
+}
+```
+
+### src/app/page.tsx
+```tsx
 import Image from "next/image";
 
 export default function Home() {
@@ -39,8 +128,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-4">
-                <button className="flex min-w-45 items-center justify-center rounded-xl bg-[#2c493e] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-transform shadow-xl shadow-[#2c493e]/30">Start Your Free Trial</button>
-                <button className="flex min-w-45 items-center justify-center gap-2 rounded-xl border-2 border-[#2c493e]/10 bg-white px-8 py-4 text-base font-bold text-[#2c493e] hover:bg-[#2c493e]/5 transition-colors">▶ Watch Demo</button>
+                <button className="flex min-w-[180px] items-center justify-center rounded-xl bg-[#2c493e] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-transform shadow-xl shadow-[#2c493e]/30">Start Your Free Trial</button>
+                <button className="flex min-w-[180px] items-center justify-center gap-2 rounded-xl border-2 border-[#2c493e]/10 bg-white px-8 py-4 text-base font-bold text-[#2c493e] hover:bg-[#2c493e]/5 transition-colors">▶ Watch Demo</button>
               </div>
               <div className="flex items-center gap-4 text-sm text-[#1c1917]/60">
                 <div className="flex -space-x-2">
@@ -52,7 +141,7 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <div className="absolute -inset-4 rounded-3xl bg-linear-to-tr from-[#8fbc8f]/20 to-[#5a8a6e]/10 blur-2xl"></div>
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#8fbc8f]/20 to-[#5a8a6e]/10 blur-2xl"></div>
               <div className="relative overflow-hidden rounded-2xl border border-[#2c493e]/5 bg-white shadow-2xl">
                 <div className="bg-[#2c493e] p-4 flex items-center gap-2">
                   <div className="flex gap-1.5">
@@ -175,7 +264,7 @@ export default function Home() {
                         ))}
                       </ul>
                     </div>
-                    <div className="flex flex-col items-center gap-4 rounded-2xl bg-[#f0f7f0] p-8 min-w-50">
+                    <div className="flex flex-col items-center gap-4 rounded-2xl bg-[#f0f7f0] p-8 min-w-[200px]">
                       <div className="flex items-baseline gap-1">
                         <span className="text-5xl font-black">$29</span>
                         <span className="text-lg text-[#1c1917]/60">/mo</span>
@@ -230,3 +319,331 @@ export default function Home() {
     </div>
   );
 }
+```
+
+---
+
+## Tech Stack
+
+| Tool | Purpose | Cost |
+|------|---------|------|
+| Next.js 14 App Router | Frontend framework | Free |
+| Vercel Hobby | Hosting + CDN + SSL | Free |
+| Supabase | Database + Auth + Storage | Free |
+| Stripe | Payments (sandbox now, live week 8) | $0/month |
+| GitHub | Code repo + auto-deploy | Free |
+| Tailwind CSS | Styling | Free |
+| TypeScript | Type safety | Free |
+
+---
+
+## Accounts
+
+| Service | URL |
+|---------|-----|
+| GitHub | github.com/ESSAIDI-M/Sellen |
+| Vercel | vercel.com → project: sellen |
+| Supabase | supabase.com → project: sellen |
+| Stripe | dashboard.stripe.com (TEST MODE) |
+| Hostinger | hpanel.hostinger.com |
+
+---
+
+## Environment Variables
+
+Create `.env.local` in project root — NEVER commit to GitHub:
+
+```bash
+# Supabase (Settings → API)
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+
+# Stripe (Developers → API Keys — stay in TEST mode)
+STRIPE_SECRET_KEY=sk_test_YOUR_KEY
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY
+STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET
+
+# App
+NEXT_PUBLIC_APP_URL=https://sellen.store
+```
+
+---
+
+## Folder Structure
+
+```
+sellen/
+├── src/
+│   └── app/
+│       ├── page.tsx                    ← Landing page ✅ ready to paste
+│       ├── layout.tsx                  ← Favicon + metadata ✅ ready to paste
+│       ├── globals.css                 ← Global styles
+│       ├── login/page.tsx              ← Week 4
+│       ├── signup/page.tsx             ← Week 4
+│       ├── dashboard/page.tsx          ← Week 7
+│       ├── [username]/page.tsx         ← Week 5
+│       └── api/
+│           ├── subscribe/route.ts      ← Week 6
+│           └── webhook/route.ts        ← Week 6
+├── components/
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   └── ProductCard.tsx
+├── lib/
+│   ├── supabase.ts                     ← Week 4
+│   └── stripe.ts                       ← Week 6
+├── public/
+│   ├── sellen.png                      ← S icon (drag in now)
+│   ├── Sellen-logo.png                 ← Full logo (drag in now)
+│   ├── favicon.ico                     ← From favicon_io.zip
+│   ├── favicon-16x16.png               ← From favicon_io.zip
+│   ├── favicon-32x32.png               ← From favicon_io.zip
+│   └── apple-touch-icon.png            ← From favicon_io.zip
+├── .env.local                          ← API keys (never commit)
+├── .gitignore
+├── package.json
+├── tailwind.config.ts
+└── tsconfig.json
+```
+
+---
+
+## Supabase Tables (create in week 4)
+
+```sql
+-- Profiles table
+create table profiles (
+  id uuid references auth.users on delete cascade,
+  username text unique,
+  display_name text,
+  bio text,
+  avatar_url text,
+  plan text default 'free',
+  created_at timestamp default now(),
+  primary key (id)
+);
+
+-- Products table
+create table products (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references profiles(id) on delete cascade,
+  title text not null,
+  description text,
+  price numeric not null,
+  file_url text,
+  is_visible boolean default true,
+  created_at timestamp default now()
+);
+
+-- Purchases table
+create table purchases (
+  id uuid default gen_random_uuid() primary key,
+  product_id uuid references products(id),
+  buyer_email text,
+  stripe_session_id text,
+  created_at timestamp default now()
+);
+```
+
+---
+
+## Install Supabase (run in terminal, week 4)
+
+```bash
+npm install @supabase/supabase-js @supabase/ssr
+```
+
+### lib/supabase.ts
+```typescript
+import { createBrowserClient } from '@supabase/ssr'
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+```
+
+---
+
+## 8-Week Build Plan
+
+### ✅ Week 1 — HTML, CSS, JavaScript basics
+- freeCodeCamp.org — HTML + CSS
+- javascript.info — JS fundamentals
+- Build a fake Sellen page in pure HTML
+
+### ✅ Week 2 — React + Next.js + Setup
+- nextjs.org/learn — React foundations
+- Set up all accounts (done ✅)
+- Connect sellen.store to Vercel (done ✅)
+
+### 🔄 Week 3 — Landing Page (IN PROGRESS)
+- [ ] Paste page.tsx (code above)
+- [ ] Paste layout.tsx (code above)
+- [ ] Add logo + favicon to public/
+- [ ] Test localhost:3000
+- [ ] Push to GitHub → live on sellen.store
+
+### Week 4 — Auth
+- [ ] Install Supabase packages
+- [ ] Create lib/supabase.ts
+- [ ] Build /signup page
+- [ ] Build /login page
+- [ ] Build protected routes (middleware)
+- [ ] Create profiles table in Supabase
+
+### Week 5 — Creator Store Page
+- [ ] Create products table in Supabase
+- [ ] Build /[username] dynamic route
+- [ ] Show creator profile + products
+- [ ] Build file upload to Supabase Storage
+- [ ] Build username setup on first login
+
+### Week 6 — Stripe Payments
+- [ ] Install Stripe: `npm install stripe @stripe/stripe-js`
+- [ ] Build /api/checkout route
+- [ ] Build /api/webhook route
+- [ ] Build /success page with download link
+- [ ] Create subscription plans ($19 Creator, $49 Pro)
+- [ ] Test with card: `4242 4242 4242 4242`
+
+### Week 7 — Creator Dashboard
+- [ ] Build /dashboard layout with sidebar
+- [ ] Build add product form
+- [ ] Build products list (edit/delete/hide)
+- [ ] Build sales page with earnings
+- [ ] Build settings page (name, bio, avatar)
+
+### Week 8 — Launch 🚀
+- [ ] Fix all bugs, test on mobile
+- [ ] Switch Stripe test → live mode
+- [ ] Email waitlist "Sellen is live!"
+- [ ] DM 20 creators on Instagram/TikTok
+- [ ] Post on Reddit r/SideProject + ProductHunt
+
+---
+
+## Pricing Strategy
+
+| Plan | Price | Transaction Fee | Features |
+|------|-------|-----------------|---------|
+| Free | $0/mo | 8% | 1 product, basic store |
+| Creator | $19/mo | 0% | Unlimited products, sessions, custom domain |
+| Pro | $49/mo | 0% | Everything + courses, memberships, affiliates |
+
+**Why $19 not $29:** Stan charges $29. You're new. $19 removes price objection. Raise to $29 after 500 creators.
+
+---
+
+## Brand Colors
+
+```css
+--primary:   #2C4A3E   /* Deep sage — main brand */
+--secondary: #5A8A6E   /* Mid sage — hover */
+--accent:    #8FBC8F   /* Light sage — highlights */
+--bg:        #F0F7F0   /* Page background */
+--dark:      #1C1917   /* Text */
+```
+
+---
+
+## Daily Git Commands
+
+```bash
+# Check what changed
+git status
+
+# Save and push (do this every day)
+git add .
+git commit -m "describe what you built"
+git push
+# Vercel auto-deploys in 60 seconds ✅
+```
+
+---
+
+## Claude Prompts to Use in VSCode
+
+### Starting a new feature
+```
+I'm building a SaaS called Sellen using Next.js 14 App Router,
+Supabase, Tailwind CSS, and TypeScript. I want to build [feature].
+Show me the files I need to create and the code for each one.
+```
+
+### When you get an error
+```
+I'm getting this error in my Next.js + Supabase project:
+[paste full error]
+
+Here is the file:
+[paste your code]
+
+What's wrong and how do I fix it?
+```
+
+### When stuck
+```
+I'm trying to [goal]. I've tried [what you tried].
+Here's my code: [paste]. What am I missing?
+```
+
+### Code review
+```
+Here is my code: [paste]
+Review this for security issues or bugs before I push to production.
+```
+
+---
+
+## Stripe Test Cards
+
+| Card Number | Result |
+|-------------|--------|
+| 4242 4242 4242 4242 | ✅ Success |
+| 4000 0000 0000 0002 | ❌ Declined |
+| 4000 0025 0000 3155 | ⚡ 3D Secure |
+
+Expiry: any future date (12/26) · CVC: any 3 digits (123)
+
+---
+
+## VSCode Extensions to Install
+
+1. **Prettier** — auto-format on save
+2. **ESLint** — catch errors as you type
+3. **Tailwind CSS IntelliSense** — class autocomplete
+4. **GitLens** — see git history
+5. **Thunder Client** — test API routes
+
+### VSCode settings.json
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on"
+}
+```
+
+---
+
+## Product Roadmap
+
+| Phase | When | Features |
+|-------|------|---------|
+| 1 | Now | Digital products only |
+| 2 | 50+ creators | 1:1 Sessions, Group Events |
+| 3 | 200+ creators | Courses, Video Q&A |
+| 4 | 500+ creators | Memberships, Group Programs, Affiliates |
+
+**Rule: Never build Phase 2 until Phase 1 has real paying users.**
+
+---
+
+*Last updated: March 15, 2026*  
+*Built with Claude + VSCode + Next.js + Supabase + Stripe*
