@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function Settings() {
+function SettingsContent() {
   const [activeTab, setActiveTab] = useState("general");
   const [email, setEmail] = useState("your@email.com");
   const [saved, setSaved] = useState(false);
@@ -95,7 +95,6 @@ export default function Settings() {
 
           {activeTab === "general" && (
             <div className="space-y-8">
-
               <section>
                 <h3 className="text-lg font-bold mb-4">Payment methods</h3>
                 <div className="bg-white border border-slate-200 rounded-xl p-6 flex items-center gap-6">
@@ -176,7 +175,6 @@ export default function Settings() {
                   <button className="px-4 py-2 border border-red-200 text-red-500 rounded-lg text-sm font-medium hover:bg-red-50 transition-colors">Delete account</button>
                 </div>
               </section>
-
             </div>
           )}
 
@@ -218,9 +216,16 @@ export default function Settings() {
               </div>
             </div>
           )}
-
         </div>
       </main>
     </div>
+  );
+}
+
+export default function Settings() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <SettingsContent />
+    </Suspense>
   );
 }
