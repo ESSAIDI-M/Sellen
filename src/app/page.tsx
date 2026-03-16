@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import Link from "next/link";
 export default function Home() {
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f0f7f0] text-[#1c1917]">
@@ -17,8 +17,8 @@ export default function Home() {
           <a className="text-[#1c1917]/80 hover:text-[#2c493e] text-sm font-medium transition-colors" href="#">Company</a>
         </nav>
         <div className="flex items-center gap-4">
-          <button className="hidden sm:flex text-[#1c1917] text-sm font-semibold px-4 py-2 hover:text-[#2c493e] transition-colors">Log In</button>
-          <button className="flex items-center justify-center rounded-lg bg-[#2c493e] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#5a8a6e] transition-all shadow-lg">Start Free Trial</button>
+          <Link href="/login" className="hidden sm:flex text-[#1c1917] text-sm font-semibold px-4 py-2 hover:text-[#2c493e] transition-colors">Log In</Link>
+          <Link href="/signup" className="flex items-center justify-center rounded-lg bg-[#2c493e] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#5a8a6e] transition-all shadow-lg">Start Free Trial</Link>
         </div>
       </header>
 
