@@ -33,24 +33,32 @@ export default function Setup() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!available) return;
-    setLoading(true);
-    setError("");
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/login"); return; }
-    const { error } = await supabase
-      .from("profiles")
-      .update({ username, bio })
-      .eq("id", user.id);
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      router.push("/dashboard");
-    }
-  };
+  e.preventDefault();
+  if (!available) return;
+  setLoading(true);
+  setError("");
+
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) { 
+    router.push("/login"); 
+    return; 
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ username, bio })
+    .eq("id", user.id);
+
+  if (error) {
+    setError(error.message);
+    setLoading(false);
+  } else {
+    // Force hard redirect to dashboard
+    window.location.href = "/dashboard";
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#f0f7f0] flex items-center justify-center px-4">
