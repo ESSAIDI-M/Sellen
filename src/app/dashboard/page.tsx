@@ -1,13 +1,35 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { createClient } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkUsername = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
+      if (!profile?.username) {
+        router.push("/dashboard/setup");
+      }
+    };
+    checkUsername();
+  }, [router]);
+
   return (
     <div className="flex h-screen overflow-hidden bg-white text-[#1c1917]" style={{fontFamily:"'Space Grotesk', sans-serif"}}>
 
       {/* SIDEBAR */}
-      <aside className="w-64 border-r border-[#BCE3BC] bg-white flex flex-col hidden md:flex flex-shrink-0">
+      <aside className="w-64 border-r border-[#BCE3BC] bg-white flex-col hidden md:flex flex-shrink-0">
         <div className="p-6 flex items-center gap-3">
           <Image src="/sellen.png" alt="Sellen" width={40} height={40} className="rounded-full" />
           <div>
@@ -15,7 +37,6 @@ export default function Dashboard() {
             <p className="text-xs text-slate-500 uppercase tracking-wider">Creator Studio</p>
           </div>
         </div>
-
         <nav className="flex-1 px-4 space-y-1">
           {[
             { icon: "home", label: "Home", href: "/dashboard", active: true },
@@ -38,7 +59,6 @@ export default function Dashboard() {
             </Link>
           ))}
         </nav>
-
         <div className="p-4 border-t border-[#BCE3BC]">
           <div className="flex items-center gap-3 px-3 py-2">
             <div className="w-8 h-8 rounded-full bg-[#BCE3BC] flex items-center justify-center text-[#2D5A27] font-bold text-sm">C</div>
@@ -53,8 +73,6 @@ export default function Dashboard() {
       {/* MAIN CONTENT */}
       <main className="flex-1 overflow-y-auto bg-[#f6f8f6]">
         <div className="max-w-6xl mx-auto py-8 px-6">
-
-          {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-3xl font-bold text-[#1c1917]">Dashboard</h2>
@@ -69,7 +87,6 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
               { label: "Total Revenue", value: "$0.00", icon: "payments", change: "Start selling today" },
@@ -91,8 +108,6 @@ export default function Dashboard() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            {/* Recent Sales */}
             <div className="lg:col-span-2 bg-white rounded-xl border border-[#BCE3BC]/40 shadow-sm">
               <div className="p-5 border-b border-[#BCE3BC]/40 flex items-center justify-between">
                 <h3 className="font-bold text-[#1c1917]">Recent Sales</h3>
@@ -105,17 +120,13 @@ export default function Dashboard() {
                   </div>
                   <p className="font-medium text-[#1c1917] mb-1">No sales yet</p>
                   <p className="text-sm text-slate-500 mb-4">Add your first product to start selling</p>
-                  <Link
-                    href="/dashboard/products/new"
-                    className="px-4 py-2 bg-[#2D5A27] text-white rounded-lg text-sm font-bold hover:bg-[#3d7a35] transition-colors"
-                  >
+                  <Link href="/dashboard/products/new" className="px-4 py-2 bg-[#2D5A27] text-white rounded-lg text-sm font-bold hover:bg-[#3d7a35] transition-colors">
                     Add a product
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* Quick Actions */}
             <div className="bg-white rounded-xl border border-[#BCE3BC]/40 shadow-sm">
               <div className="p-5 border-b border-[#BCE3BC]/40">
                 <h3 className="font-bold text-[#1c1917]">Quick Actions</h3>
@@ -127,11 +138,7 @@ export default function Dashboard() {
                   { icon: "share", label: "Share store link", href: "#" },
                   { icon: "settings", label: "Account settings", href: "/dashboard/settings" },
                 ].map((action) => (
-                  <Link
-                    key={action.label}
-                    href={action.href}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#BCE3BC]/10 transition-colors group"
-                  >
+                  <Link key={action.label} href={action.href} className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#BCE3BC]/10 transition-colors group">
                     <div className="w-8 h-8 rounded-lg bg-[#BCE3BC]/20 flex items-center justify-center group-hover:bg-[#BCE3BC]/40 transition-colors">
                       <span className="material-symbols-outlined text-[#2D5A27] text-base">{action.icon}</span>
                     </div>
@@ -140,8 +147,6 @@ export default function Dashboard() {
                   </Link>
                 ))}
               </div>
-
-              {/* Upgrade banner */}
               <div className="mx-5 mb-5 p-4 bg-[#2D5A27] rounded-xl text-white">
                 <p className="font-bold text-sm mb-1">Upgrade to Creator</p>
                 <p className="text-xs text-white/70 mb-3">0% fees + unlimited products</p>
@@ -150,10 +155,8 @@ export default function Dashboard() {
                 </button>
               </div>
             </div>
-
           </div>
 
-          {/* Store Link Banner */}
           <div className="mt-6 bg-[#BCE3BC]/20 border border-[#BCE3BC] rounded-xl p-5 flex items-center justify-between">
             <div>
               <p className="font-bold text-[#2D5A27]">Your store is live 🌿</p>
@@ -167,7 +170,6 @@ export default function Dashboard() {
               Copy link
             </button>
           </div>
-
         </div>
       </main>
     </div>
