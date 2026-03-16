@@ -76,7 +76,7 @@ export default function Dashboard() {
               padding: 12,
               cornerRadius: 8,
               callbacks: {
-                sed -i '' "s/ctx.parsed.y.toFixed/ctx.parsed.y?.toFixed/g" src/app/dashboard/page.tsx
+                label: (ctx) => ` $${ctx.parsed.y?.toFixed(2)}`,
               },
             },
           },
