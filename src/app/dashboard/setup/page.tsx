@@ -32,35 +32,12 @@ export default function Setup() {
     checkUsername(value);
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
   if (!available) return;
   setLoading(true);
   setError("");
-
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    window.location.href = "/login";
-    return;
-  }
-
-  const { error } = await supabase
-    .from("profiles")
-    .upsert({ 
-      id: user.id,
-      username, 
-      bio,
-      display_name: user.user_metadata?.display_name || username
-    });
-
-  if (error) {
-    setError(error.message);
-    setLoading(false);
-  } else {
-    window.location.href = "/dashboard";
-  }
+  window.location.href = "/dashboard";
 };
 
   return (

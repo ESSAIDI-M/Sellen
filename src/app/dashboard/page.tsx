@@ -24,10 +24,11 @@ export default function Dashboard() {
         .select("username, display_name, plan")
         .eq("id", user.id)
         .single();
-      if (!profile?.username) { router.push("/dashboard/setup"); return; }
-      setUsername(profile.username);
-      setDisplayName(profile.display_name || profile.username);
-      setPlan(profile.plan || "free");
+      if (profile?.username) {
+        setUsername(profile.username);
+        setDisplayName(profile.display_name || profile.username);
+        setPlan(profile.plan || "free");
+      }
     };
     init();
   }, [router]);
