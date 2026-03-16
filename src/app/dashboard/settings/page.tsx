@@ -1,12 +1,51 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("general");
   const [email, setEmail] = useState("your@email.com");
   const [saved, setSaved] = useState(false);
+
+  // Stripe state
+  const [stripeConnected, setStripeConnected] = useState(false);
+  const [stripeLoading, setStripeLoading] = useState(false);
+  const searchParams = useSearchParams();
+
+  // Check Stripe status on page load
+  useEffect(() => {
+    const checkStripe = async () => {
+      try {
+        const res = await fetch("/api/stripe/status");
+        const data = await res.json();
+        setStripeConnected(data.connected || false);
+      } catch (err) {
+        console.error("Failed to check Stripe status:", err);
+      }
+    };
+    checkStripe();
+  }, []);
+
+  // Handle Stripe Connect button click
+  const handleConnectStripe = async () => {
+    setStripeLoading(true);
+    try {
+      const res = await fetch("/api/stripe/connect", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Failed to create Stripe link. Please try again.");
+      }
+    } catch (err) {
+      console.error("Stripe connect error:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setStripeLoading(false);
+    }
+  };
 
   const handleSave = () => {
     setSaved(true);
@@ -92,18 +131,48 @@ export default function Settings() {
                 <div className="bg-white border border-slate-200 rounded-xl p-6 flex items-center gap-6">
                   <div className="flex-1">
                     <h4 className="font-bold text-lg">Stripe</h4>
-                    <p className="text-slate-500 text-sm mt-1 mb-4">
-                      Connect your Stripe account to start accepting payments and manage your revenue directly.
-                    </p>
-                    <button className="flex items-center gap-2 px-5 py-2 bg-[#BCE3BC]/30 text-[#2D5A27] rounded-lg font-bold text-sm hover:bg-[#BCE3BC]/50 transition-colors border border-[#BCE3BC]">
-                      <span className="material-symbols-outlined text-sm">link</span>
-                      Connect Stripe
-                    </button>
+                    {stripeConnected ? (
+                      <>
+                        <p className="text-green-600 text-sm mt-1 mb-2 font-medium flex items-center gap-1">
+                          <span className="material-symbols-outlined text-sm">check_circle</span>
+                          Connected — You can now accept payments
+                        </p>
+                        
+                          href="https://connect.stripe.com/express_login"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-5 py-2 bg-slate-100 text-slate-700 rounded-lg font-bold text-sm hover:bg-slate-200 transition-colors border border-slate-200 w-fit"
+                        >
+                          <span className="material-symbols-outlined text-sm">open_in_new</span>
+                          Open Stripe Dashboard
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-slate-500 text-sm mt-1 mb-4">
+                          Connect your Stripe account to start accepting payments and manage your revenue directly.
+                        </p>
+                        <button
+                          onClick={handleConnectStripe}
+                          disabled={stripeLoading}
+                          className="flex items-center gap-2 px-5 py-2 bg-[#BCE3BC]/30 text-[#2D5A27] rounded-lg font-bold text-sm hover:bg-[#BCE3BC]/50 transition-colors border border-[#BCE3BC] disabled:opacity-50"
+                        >
+                          <span className="material-symbols-outlined text-sm">link</span>
+                          {stripeLoading ? "Connecting..." : "Connect Stripe"}
+                        </button>
+                      </>
+                    )}
                   </div>
-                  <div className="w-20 h-20 rounded-xl bg-[#635BFF] flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-black text-2xl">St</span>
+                  <div className={`w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0 ${stripeConnected ? "bg-green-500" : "bg-[#635BFF]"}`}>
+                    <span className="text-white font-black text-2xl">{stripeConnected ? "✓" : "St"}</span>
                   </div>
                 </div>
+
+                {searchParams.get("stripe") === "success" && !stripeConnected && (
+                  <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700">
+                    Stripe is verifying your account. This may take a few minutes. Refresh the page to check status.
+                  </div>
+                )}
               </section>
 
               {/* Upgrade Banner */}
