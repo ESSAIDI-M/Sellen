@@ -4,12 +4,56 @@ import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
+const STRIPE_COUNTRIES = [
+  { code: "US", name: "United States" },
+  { code: "GB", name: "United Kingdom" },
+  { code: "CA", name: "Canada" },
+  { code: "AU", name: "Australia" },
+  { code: "NZ", name: "New Zealand" },
+  { code: "FR", name: "France" },
+  { code: "DE", name: "Germany" },
+  { code: "ES", name: "Spain" },
+  { code: "IT", name: "Italy" },
+  { code: "NL", name: "Netherlands" },
+  { code: "BE", name: "Belgium" },
+  { code: "AT", name: "Austria" },
+  { code: "IE", name: "Ireland" },
+  { code: "PT", name: "Portugal" },
+  { code: "FI", name: "Finland" },
+  { code: "SE", name: "Sweden" },
+  { code: "DK", name: "Denmark" },
+  { code: "NO", name: "Norway" },
+  { code: "PL", name: "Poland" },
+  { code: "CZ", name: "Czech Republic" },
+  { code: "RO", name: "Romania" },
+  { code: "BG", name: "Bulgaria" },
+  { code: "HR", name: "Croatia" },
+  { code: "HU", name: "Hungary" },
+  { code: "LT", name: "Lithuania" },
+  { code: "LV", name: "Latvia" },
+  { code: "EE", name: "Estonia" },
+  { code: "SK", name: "Slovakia" },
+  { code: "SI", name: "Slovenia" },
+  { code: "LU", name: "Luxembourg" },
+  { code: "MT", name: "Malta" },
+  { code: "CY", name: "Cyprus" },
+  { code: "CH", name: "Switzerland" },
+  { code: "JP", name: "Japan" },
+  { code: "SG", name: "Singapore" },
+  { code: "HK", name: "Hong Kong" },
+  { code: "MY", name: "Malaysia" },
+  { code: "AE", name: "United Arab Emirates" },
+  { code: "MX", name: "Mexico" },
+  { code: "BR", name: "Brazil" },
+];
+
 function SettingsContent() {
   const [activeTab, setActiveTab] = useState("general");
   const [email, setEmail] = useState("your@email.com");
   const [saved, setSaved] = useState(false);
   const [stripeConnected, setStripeConnected] = useState(false);
   const [stripeLoading, setStripeLoading] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState("US");
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -28,7 +72,11 @@ function SettingsContent() {
   const handleConnectStripe = async () => {
     setStripeLoading(true);
     try {
-      const res = await fetch("/api/stripe/connect", { method: "POST" });
+      const res = await fetch("/api/stripe/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ country: selectedCountry }),
+      });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
@@ -97,32 +145,46 @@ function SettingsContent() {
             <div className="space-y-8">
               <section>
                 <h3 className="text-lg font-bold mb-4">Payment methods</h3>
-                <div className="bg-white border border-slate-200 rounded-xl p-6 flex items-center gap-6">
-                  <div className="flex-1">
-                    <h4 className="font-bold text-lg">Stripe</h4>
-                    {stripeConnected ? (
-                      <div>
-                        <p className="text-green-600 text-sm mt-1 mb-2 font-medium flex items-center gap-1">
-                          <span className="material-symbols-outlined text-sm">check_circle</span>
-                          Connected — You can now accept payments
-                        </p>
-                        <a href="https://connect.stripe.com/express_login" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2 bg-slate-100 text-slate-700 rounded-lg font-bold text-sm hover:bg-slate-200 transition-colors border border-slate-200 w-fit">
-                          <span className="material-symbols-outlined text-sm">open_in_new</span>
-                          Open Stripe Dashboard
-                        </a>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-slate-500 text-sm mt-1 mb-4">Connect your Stripe account to start accepting payments and manage your revenue directly.</p>
-                        <button onClick={handleConnectStripe} disabled={stripeLoading} className="flex items-center gap-2 px-5 py-2 bg-[#BCE3BC]/30 text-[#2D5A27] rounded-lg font-bold text-sm hover:bg-[#BCE3BC]/50 transition-colors border border-[#BCE3BC] disabled:opacity-50">
-                          <span className="material-symbols-outlined text-sm">link</span>
-                          {stripeLoading ? "Connecting..." : "Connect Stripe"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <div className={`w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0 ${stripeConnected ? "bg-green-500" : "bg-[#635BFF]"}`}>
-                    <span className="text-white font-black text-2xl">{stripeConnected ? "✓" : "St"}</span>
+                <div className="bg-white border border-slate-200 rounded-xl p-6">
+                  <div className="flex items-center gap-6">
+                    <div className="flex-1">
+                      <h4 className="font-bold text-lg">Stripe</h4>
+                      {stripeConnected ? (
+                        <div>
+                          <p className="text-green-600 text-sm mt-1 mb-2 font-medium flex items-center gap-1">
+                            <span className="material-symbols-outlined text-sm">check_circle</span>
+                            Connected — You can now accept payments
+                          </p>
+                          <a href="https://connect.stripe.com/express_login" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2 bg-slate-100 text-slate-700 rounded-lg font-bold text-sm hover:bg-slate-200 transition-colors border border-slate-200 w-fit">
+                            <span className="material-symbols-outlined text-sm">open_in_new</span>
+                            Open Stripe Dashboard
+                          </a>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-slate-500 text-sm mt-1 mb-4">Connect your Stripe account to start accepting payments and manage your revenue directly.</p>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Your country</label>
+                            <select
+                              value={selectedCountry}
+                              onChange={(e) => setSelectedCountry(e.target.value)}
+                              className="w-full max-w-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#BCE3BC] focus:border-transparent"
+                            >
+                              {STRIPE_COUNTRIES.map((c) => (
+                                <option key={c.code} value={c.code}>{c.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <button onClick={handleConnectStripe} disabled={stripeLoading} className="flex items-center gap-2 px-5 py-2 bg-[#BCE3BC]/30 text-[#2D5A27] rounded-lg font-bold text-sm hover:bg-[#BCE3BC]/50 transition-colors border border-[#BCE3BC] disabled:opacity-50">
+                            <span className="material-symbols-outlined text-sm">link</span>
+                            {stripeLoading ? "Connecting..." : "Connect Stripe"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className={`w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0 ${stripeConnected ? "bg-green-500" : "bg-[#635BFF]"}`}>
+                      <span className="text-white font-black text-2xl">{stripeConnected ? "✓" : "St"}</span>
+                    </div>
                   </div>
                 </div>
                 {searchParams.get("stripe") === "success" && !stripeConnected && (
